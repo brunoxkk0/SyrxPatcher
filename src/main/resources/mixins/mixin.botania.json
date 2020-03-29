@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "br.com.brunoxkk0.sp.mixins.botania",
+  "mixins":[],
+  "server": [],
+  "client": [
+    "MixinSkyBoxRenderEvents"
+  ],
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.7.11",
+  "target": "@env(PREINIT)",
+  "refmap":"mixins.syrxms.refmap.json"
+}

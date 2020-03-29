@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "br.com.brunoxkk0.sp.mixins.forge",
+  "mixins":[],
+  "client": [
+    "MixinLoader"
+  ],
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.7.11",
+  "target": "@env(INIT)",
+  "refmap":"mixins.syrxms.refmap.json",
+  "injectors": {
+    "maxShiftBy": 10
+  }
+}

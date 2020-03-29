@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "br.com.brunoxkk0.sp.mixins.excompressum",
+  "mixins":[
+    "MixinExCompressum"
+  ],
+  "server": [],
+  "client": [],
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.7.11",
+  "target": "@env(DEFAULT)",
+  "refmap":"mixins.syrxms.refmap.json"
+}

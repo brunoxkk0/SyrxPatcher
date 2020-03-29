@@ -1,0 +1,118 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        maven { url "http://files.minecraftforge.net/maven" }
+        maven { url "http://repo.spongepowered.org/maven" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
+        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
+    }
+}
+
+apply plugin: "java"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+apply plugin: "idea"
+
+repositories {
+
+    maven {
+        name = 'spongepowered-repo'
+        url = 'http://repo.spongepowered.org/maven/'
+    }
+
+    maven {
+        name = "DimDev Maven"
+        url = "http://www.dimdev.org/maven"
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude module: "launchwrapper"
+        exclude module: "guava"
+    }
+
+    compileOnly fileTree(dir:"libs", include:"*.jar")
+
+}
+
+version = modVersion
+group = modGroup
+archivesBaseName = modBaseName
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main
+}
+
+minecraft {
+    version = project.forgeVersion
+    runDir = "run"
+    mappings = project.mcpVersion
+}
+
+mixin {
+    add sourceSets.main, "mixins.syrxms.refmap.json"
+}
+
+reobf {
+    shadowJar {
+        mappingType = "SEARGE"
+    }
+}
+
+processResources {
+    filesMatching("mcmod.info") {
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+
+    // Re-run this task when these change
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+}
+
+jar {
+    classifier "thin"
+    manifest.attributes(
+            "FMLCorePlugin": "br.com.brunoxkk0.sp.SyrxPatcher",
+            "FMLCorePluginContainsFMLMod": "true",
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
+    )
+}
+
+shadowJar {
+    exclude "dummyThing"
+    for(File file : fileTree(dir:"libs", include:"*.jar")){
+        exclude (file.getName().toString())
+    }
+}
+
+tasks.jar.configure {
+    classifier = 'nolibs'
+}
+
+tasks.shadowJar.configure {
+    classifier = null
+}
+
+artifacts {
+    archives shadowJar
+    shadow shadowJar
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
